@@ -3,7 +3,8 @@ import { readFile } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
 import { extname, join, normalize, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createGeminiReply } from './lib/gemini.mjs';
+import { createModelReply } from './lib/model.mjs';
+import { checkRateLimit } from './lib/rate-limit.mjs';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const root = resolve(__dirname);
@@ -14,6 +15,11 @@ loadEnv();
 const server = createServer(async (req, res) => {
   try {
     if (req.method === 'POST' && req.url === '/api/chat') {
+      const rateLimit = checkRateLimit(req.socket.remoteAddress);
+      if (!rateLimit.allowed) {
+        sendJson(res, 429, { error: 'Rate limit exceeded' });
+        return;
+      }
       await handleChat(req, res);
       return;
     }
@@ -77,10 +83,9 @@ function loadEnv() {
 
 async function handleChat(req, res) {
   const body = await readJson(req);
-  const reply = await createGeminiReply({
+  const reply = await createModelReply({
     messages: body.messages,
-    apiKey: process.env.GEMINI_API_KEY,
-    model: process.env.GEMINI_MODEL
+    env: process.env
   });
 
   sendJson(res, 200, { reply });
@@ -100,7 +105,9 @@ function readJson(req) {
       try {
         resolveRequest(raw ? JSON.parse(raw) : {});
       } catch {
-        rejectRequest(new Error('Invalid JSON body'));
+        const error = new Error('Invalid JSON body');
+        error.status = 400;
+        rejectRequest(error);
       }
     });
     req.on('error', rejectRequest);
@@ -113,7 +120,8 @@ async function serveStatic(req, res) {
   const filePath = normalize(join(root, requestedPath));
   const relativePath = relative(root, filePath);
 
-  if (relativePath.startsWith('..') || relativePath === '..') {
+  const pathParts = relativePath.split(/[\\/]/);
+  if (relativePath.startsWith('..') || relativePath === '..' || pathParts.some(part => part.startsWith('.'))) {
     res.writeHead(403);
     res.end('Forbidden');
     return;

@@ -1,4 +1,5 @@
-import { createGeminiReply } from '../lib/gemini.mjs';
+import { createModelReply } from '../lib/model.mjs';
+import { checkRateLimit } from '../lib/rate-limit.mjs';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,11 +8,16 @@ export default async function handler(req, res) {
   }
 
   try {
+    const rateLimit = checkRateLimit(getClientKey(req));
+    if (!rateLimit.allowed) {
+      sendJson(res, 429, { error: 'Rate limit exceeded' });
+      return;
+    }
+
     const body = await readJson(req);
-    const reply = await createGeminiReply({
+    const reply = await createModelReply({
       messages: body.messages,
-      apiKey: process.env.GEMINI_API_KEY,
-      model: process.env.GEMINI_MODEL
+      env: process.env
     });
 
     sendJson(res, 200, { reply });
@@ -22,12 +28,30 @@ export default async function handler(req, res) {
   }
 }
 
+function getClientKey(req) {
+  const forwardedFor = req.headers['x-forwarded-for'];
+  if (typeof forwardedFor === 'string' && forwardedFor) {
+    return forwardedFor.split(',')[0].trim();
+  }
+  return req.socket?.remoteAddress || 'anonymous';
+}
+
 async function readJson(req) {
   if (req.body && typeof req.body === 'object') return req.body;
-  if (typeof req.body === 'string') return JSON.parse(req.body);
+  if (typeof req.body === 'string') return parseJson(req.body);
 
   const raw = await readRawBody(req);
-  return raw ? JSON.parse(raw) : {};
+  return raw ? parseJson(raw) : {};
+}
+
+function parseJson(raw) {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    const error = new Error('Invalid JSON body');
+    error.status = 400;
+    throw error;
+  }
 }
 
 function readRawBody(req) {
