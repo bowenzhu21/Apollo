@@ -323,7 +323,8 @@
     padding: 20px 16px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+    overflow-y: auto;
   }
 
   .stat-block {
@@ -349,28 +350,6 @@
 
   .stat-value.green { color: var(--neon-green); text-shadow: 0 0 10px rgba(0,255,136,0.5); }
   .stat-value.purple { color: var(--neon-purple); text-shadow: 0 0 10px rgba(191,0,255,0.5); }
-
-  .landmark-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 3px;
-    margin-top: 6px;
-  }
-
-  .landmark-dot {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: rgba(0,255,255,0.15);
-    border: 1px solid rgba(0,255,255,0.2);
-    transition: all 0.1s;
-  }
-
-  .landmark-dot.lit {
-    background: var(--neon-cyan);
-    box-shadow: 0 0 6px var(--neon-cyan);
-    border-color: var(--neon-cyan);
-  }
 
   /* Chat panel */
   #chat-panel {
@@ -682,7 +661,7 @@
 <div id="app">
   <!-- Header -->
   <div id="header">
-    <div class="logo">GESTURAL<span>.</span>AI</div>
+    <div class="logo">SPATIAL<span>.</span>AI</div>
     <div class="header-meta">
       <span><span class="status-dot" id="camDot"></span>VISION</span>
       <span><span class="status-dot active" id="llmDot"></span>LLM LINK</span>
@@ -692,77 +671,41 @@
 
   <!-- Left panel -->
   <div id="left-panel">
-    <div class="panel-title">// GESTURE LEXICON</div>
+    <div class="panel-title">// LEFT HAND CONTROLS</div>
 
-    <div class="gesture-item" id="g-open">
-      <div class="gesture-emoji">🖐</div>
-      <div class="gesture-info">
-        <div class="gesture-name">OPEN PALM</div>
-        <div class="gesture-desc">Idle / no action</div>
-        <div class="confidence-bar"><div class="confidence-fill" id="cf-open"></div></div>
-      </div>
-    </div>
-
-    <div class="gesture-item" id="g-pinch">
+    <div class="gesture-item" data-side="left" data-gesture="pinch">
       <div class="gesture-emoji">🤏</div>
       <div class="gesture-info">
-        <div class="gesture-name">PINCH</div>
-        <div class="gesture-desc">Left hold 2s: send</div>
-        <div class="confidence-bar"><div class="confidence-fill" id="cf-pinch"></div></div>
+        <div class="gesture-name">SEND</div>
+        <div class="gesture-desc">Pinch and hold 2s</div>
+        <div class="confidence-bar"><div class="confidence-fill" data-side="left" data-confidence="pinch"></div></div>
       </div>
     </div>
 
-    <div class="gesture-item" id="g-fist">
-      <div class="gesture-emoji">✊</div>
-      <div class="gesture-info">
-        <div class="gesture-name">FIST</div>
-        <div class="gesture-desc">Hold 2s to clear</div>
-        <div class="confidence-bar"><div class="confidence-fill" id="cf-fist"></div></div>
-      </div>
-    </div>
-
-    <div class="gesture-item" id="g-point">
-      <div class="gesture-emoji">☝️</div>
-      <div class="gesture-info">
-        <div class="gesture-name">INDEX UP</div>
-        <div class="gesture-desc">Left scroll up / Right prompt 1</div>
-        <div class="confidence-bar"><div class="confidence-fill" id="cf-point"></div></div>
-      </div>
-    </div>
-
-    <div class="gesture-item" id="g-peace">
+    <div class="gesture-item" data-side="left" data-gesture="peace">
       <div class="gesture-emoji">✌️</div>
       <div class="gesture-info">
-        <div class="gesture-name">PEACE</div>
-        <div class="gesture-desc">Left hold 2s: scroll down</div>
-        <div class="confidence-bar"><div class="confidence-fill" id="cf-peace"></div></div>
+        <div class="gesture-name">SCROLL UP</div>
+        <div class="gesture-desc">Peace sign and hold 2s</div>
+        <div class="confidence-bar"><div class="confidence-fill" data-side="left" data-confidence="peace"></div></div>
       </div>
     </div>
 
-    <div class="gesture-item" id="g-middle">
-      <div class="gesture-emoji">M</div>
+    <div class="gesture-item" data-side="left" data-gesture="open">
+      <div class="gesture-emoji">🖐</div>
       <div class="gesture-info">
-        <div class="gesture-name">MIDDLE UP</div>
-        <div class="gesture-desc">Right hand: prompt 2</div>
-        <div class="confidence-bar"><div class="confidence-fill" id="cf-middle"></div></div>
+        <div class="gesture-name">SCROLL DOWN</div>
+        <div class="gesture-desc">Open palm and hold 2s</div>
+        <div class="confidence-bar"><div class="confidence-fill" data-side="left" data-confidence="open"></div></div>
       </div>
     </div>
 
-    <div class="gesture-item" id="g-ring">
-      <div class="gesture-emoji">R</div>
+    <div class="gesture-item" data-side="left" data-gesture="fist">
+      <div class="gesture-emoji">✊</div>
       <div class="gesture-info">
-        <div class="gesture-name">RING UP</div>
-        <div class="gesture-desc">Right hand: prompt 3</div>
-        <div class="confidence-bar"><div class="confidence-fill" id="cf-ring"></div></div>
-      </div>
-    </div>
-
-    <div class="gesture-item" id="g-pinky">
-      <div class="gesture-emoji">P</div>
-      <div class="gesture-info">
-        <div class="gesture-name">PINKY UP</div>
-        <div class="gesture-desc">Right hand: prompt 4</div>
-        <div class="confidence-bar"><div class="confidence-fill" id="cf-pinky"></div></div>
+        <div class="gesture-name">CLEAR</div>
+        <div class="gesture-desc">Fist and hold 2s</div>
+        <div class="confidence-bar"><div class="confidence-fill" data-side="left" data-confidence="fist"></div></div>
       </div>
     </div>
   </div>
@@ -783,9 +726,47 @@
     </div>
   </div>
 
-  <!-- Right stats panel -->
+  <!-- Right prompt panel -->
   <div id="right-panel">
-    <div class="panel-title">// NEURAL STATS</div>
+    <div class="panel-title">// RIGHT HAND PROMPTS</div>
+
+    <div class="gesture-item" data-side="right" data-gesture="open">
+      <div class="gesture-emoji">🖐</div>
+      <div class="gesture-info">
+        <div class="gesture-name">PROMPT 1</div>
+        <div class="gesture-desc">Brief status and next move</div>
+        <div class="confidence-bar"><div class="confidence-fill" data-side="right" data-confidence="open"></div></div>
+      </div>
+    </div>
+
+    <div class="gesture-item" data-side="right" data-gesture="peace">
+      <div class="gesture-emoji">✌️</div>
+      <div class="gesture-info">
+        <div class="gesture-name">PROMPT 2</div>
+        <div class="gesture-desc">Compare options</div>
+        <div class="confidence-bar"><div class="confidence-fill" data-side="right" data-confidence="peace"></div></div>
+      </div>
+    </div>
+
+    <div class="gesture-item" data-side="right" data-gesture="three">
+      <div class="gesture-emoji">3</div>
+      <div class="gesture-info">
+        <div class="gesture-name">PROMPT 3</div>
+        <div class="gesture-desc">Build a plan</div>
+        <div class="confidence-bar"><div class="confidence-fill" data-side="right" data-confidence="three"></div></div>
+      </div>
+    </div>
+
+    <div class="gesture-item" data-side="right" data-gesture="fist">
+      <div class="gesture-emoji">✊</div>
+      <div class="gesture-info">
+        <div class="gesture-name">PROMPT 4</div>
+        <div class="gesture-desc">Critique the approach</div>
+        <div class="confidence-bar"><div class="confidence-fill" data-side="right" data-confidence="fist"></div></div>
+      </div>
+    </div>
+
+    <div class="panel-title" style="margin-top:4px;">// SPATIAL STATUS</div>
 
     <div class="stat-block">
       <div class="stat-label">HANDS DETECTED</div>
@@ -795,12 +776,6 @@
     <div class="stat-block">
       <div class="stat-label">ACTIVE GESTURE</div>
       <div class="stat-value green" id="activeGestureName" style="font-size:13px; letter-spacing:1px;">NONE</div>
-    </div>
-
-    <div class="stat-block">
-      <div class="stat-label">LANDMARKS LIVE</div>
-      <div class="landmark-grid" id="landmarkGrid">
-      </div>
     </div>
 
     <div class="stat-block">
@@ -814,7 +789,7 @@
     <div id="messages">
       <div class="message">
         <span class="msg-tag ai">SYS</span>
-        <span class="msg-text" style="color:var(--dim);">System online. Right hand selects prompt 1-4. Left hand holds 2s to send, scroll, or clear. Manual typing remains available.</span>
+        <span class="msg-text" style="color:var(--dim);">SPATIAL online. Right hand selects a prompt. Left hand holds a control for 2s. Manual typing remains available.</span>
       </div>
     </div>
     <div id="input-bar">
@@ -840,6 +815,7 @@ let lastLeftGesture = null;
 let leftGestureStartTime = 0;
 let leftActionHoldTime = 0;
 let leftActionCompleted = false;
+let lastRightPromptGesture = null;
 const leftActionHoldThreshold = 2000; // ms
 let animFrame = null;
 let fingerTrails = [];
@@ -853,21 +829,21 @@ const cursor = document.getElementById('cursor');
 const trailCanvas = document.getElementById('trailCanvas');
 const trailCtx = trailCanvas.getContext('2d');
 const presetMessages = {
-  POINT: {
+  OPEN: {
     label: 'PROMPT 1',
-    text: 'Give me a quick status summary.'
+    text: 'Brief me on the current situation and identify the most important next move.'
   },
-  MIDDLE: {
+  PEACE: {
     label: 'PROMPT 2',
-    text: 'What is the next best step?'
+    text: 'Compare the best options, include tradeoffs, and recommend one.'
   },
-  RING: {
+  THREE: {
     label: 'PROMPT 3',
-    text: 'Give me three concise options.'
+    text: 'Turn this into a concrete step-by-step plan with checkpoints.'
   },
-  PINKY: {
+  FIST: {
     label: 'PROMPT 4',
-    text: 'Explain this in plain language.'
+    text: 'Critique the current approach: risks, weak assumptions, and a stronger alternative.'
   }
 };
 let selectedPresetGesture = null;
@@ -899,7 +875,6 @@ window.initSystem = function() {
       bootScreen.style.display = 'none';
     }, 800);
   }
-  initLandmarkGrid();
   startClock();
   resizeTrail();
   initTrailLoop();
@@ -920,17 +895,6 @@ function startClock() {
     document.getElementById('clockDisplay').textContent =
       d.toTimeString().split(' ')[0];
   }, 1000);
-}
-
-// ── Landmark grid init ─────────────────────────────────────────────────────
-function initLandmarkGrid() {
-  const grid = document.getElementById('landmarkGrid');
-  for (let i = 0; i < 21; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'landmark-dot';
-    dot.id = `lm-${i}`;
-    grid.appendChild(dot);
-  }
 }
 
 // ── Trail canvas ───────────────────────────────────────────────────────────
@@ -1055,10 +1019,6 @@ function drawHands(ctx, canvas, result) {
 
   if (!result.landmarks || result.landmarks.length === 0) {
     document.getElementById('handCount').textContent = '0';
-    for (let i = 0; i < 21; i++) {
-      const dot = document.getElementById(`lm-${i}`);
-      if (dot) dot.classList.remove('lit');
-    }
     return;
   }
 
@@ -1108,19 +1068,15 @@ function drawHands(ctx, canvas, result) {
       }
     });
 
-    // Landmark grid
-    if (hi === 0) {
-      landmarks.forEach((_, i) => {
-        const dot = document.getElementById(`lm-${i}`);
-        if (dot) dot.classList.add('lit');
-      });
-    }
-
     lastLandmarks = px;
   });
 }
 
 // ── Gesture recognition ────────────────────────────────────────────────────
+function toDisplayX(x) {
+  return mirrorCamera ? 1 - x : x;
+}
+
 function classifyGesture(landmarks) {
   const lm = landmarks;
   // Fingertip = 4,8,12,16,20. MCP = 5,9,13,17. Wrist = 0
@@ -1129,53 +1085,48 @@ function classifyGesture(landmarks) {
   const dist = (a, b) => Math.hypot(a.x-b.x, a.y-b.y);
   const clamp01 = value => Math.max(0, Math.min(1, value));
 
-  // Finger extended?
   const indexUp = indexTip.y < lm[6].y;
   const middleUp = middleTip.y < lm[10].y;
   const ringUp = ringTip.y < lm[14].y;
   const pinkyUp = pinkyTip.y < lm[18].y;
-
   const allFingersDown = !indexUp && !middleUp && !ringUp && !pinkyUp;
 
   const pinchDist = dist(thumbTip, indexTip);
-  const palmSize = Math.max(
-    dist(lm[5], lm[17]),
-    dist(lm[0], lm[9]),
-    0.001
-  );
+  const palmSize = Math.max(dist(lm[5], lm[17]), dist(lm[0], lm[9]), 0.001);
   const pinchRatio = pinchDist / palmSize;
 
-  // PINCH - MediaPipe landmarks are normalized, so compare against hand size.
   if (!allFingersDown && pinchRatio < 0.45) {
     return { name: 'PINCH', confidence: clamp01((0.45 - pinchRatio) / 0.25) };
   }
 
-  // FIST
   if (allFingersDown) return { name: 'FIST', confidence: 0.9 };
-
-  // OPEN PALM
   if (indexUp && middleUp && ringUp && pinkyUp) return { name: 'OPEN', confidence: 0.85 };
-
-  // POINT (index only)
-  if (indexUp && !middleUp && !ringUp && !pinkyUp) return { name: 'POINT', confidence: 0.85 };
-
-  // PEACE (index + middle)
+  if (indexUp && middleUp && ringUp && !pinkyUp) return { name: 'THREE', confidence: 0.85 };
   if (indexUp && middleUp && !ringUp && !pinkyUp) return { name: 'PEACE', confidence: 0.85 };
 
   return { name: 'NONE', confidence: 0 };
 }
 
-function getTrackedHand(result) {
-  const hands = result.landmarks.map((landmarks, index) => ({
-    landmarks,
-    index,
-    label: getHandLabel(result, index)
-  }));
-
-  return hands.find(hand => hand.label === 'RIGHT') || hands[0];
+function getHands(result) {
+  return result.landmarks.map((landmarks, index) => {
+    const pixels = landmarksToCanvasPixels(landmarks);
+    return {
+      landmarks,
+      pixels,
+      index,
+      label: getUserHandLabel(result, index, landmarks),
+      gesture: classifyGesture(landmarks)
+    };
+  });
 }
 
-function getHandLabel(result, index) {
+function getUserHandLabel(result, index, landmarks) {
+  const rawLabel = getRawHandLabel(result, index);
+  if (rawLabel === 'UNKNOWN') return inferHandFromPosition(landmarks);
+  return swapMediaPipeHandedness ? swapHandLabel(rawLabel) : rawLabel;
+}
+
+function getRawHandLabel(result, index) {
   const handedness =
     result.handednesses?.[index]?.[0] ||
     result.handedness?.[index]?.[0] ||
@@ -1186,125 +1137,180 @@ function getHandLabel(result, index) {
   return typeof label === 'string' ? label.toUpperCase() : 'UNKNOWN';
 }
 
+function swapHandLabel(label) {
+  if (label === 'LEFT') return 'RIGHT';
+  if (label === 'RIGHT') return 'LEFT';
+  return label;
+}
+
+function inferHandFromPosition(landmarks) {
+  return toDisplayX(landmarks[0].x) >= 0.5 ? 'RIGHT' : 'LEFT';
+}
+
 function landmarksToCanvasPixels(landmarks) {
   const canvas = document.getElementById('handCanvas');
   return landmarks.map(lm => ({
-    x: (1 - lm.x) * canvas.width,
+    x: toDisplayX(lm.x) * canvas.width,
     y: lm.y * canvas.height
   }));
 }
 
 function processGestures(result) {
-  const pinchRing = document.getElementById('pinchRing');
-  const pinchProgress = document.getElementById('pinchProgress');
-  const sendBtn = document.getElementById('sendBtn');
-
   if (!result.landmarks || result.landmarks.length === 0) {
     resetGestureUI();
     return;
   }
 
-  const trackedHand = getTrackedHand(result);
-  const gesture = classifyGesture(trackedHand.landmarks);
-  const trackedLandmarks = landmarksToCanvasPixels(trackedHand.landmarks);
-  lastLandmarks = trackedLandmarks;
+  const hands = getHands(result);
+  const leftHand = hands.find(hand => hand.label === 'LEFT');
+  const rightHand = hands.find(hand => hand.label === 'RIGHT');
+  lastLandmarks = leftHand?.pixels || rightHand?.pixels || null;
 
-  // Update confidence bars
-  const allGestures = ['open','pinch','fist','point','peace'];
-  allGestures.forEach(g => {
-    const el = document.getElementById(`cf-${g}`);
-    const item = document.getElementById(`g-${g}`);
-    if (gesture.name.toLowerCase() === g) {
-      el.style.width = (gesture.confidence * 100) + '%';
-      item.classList.add('active-gesture');
-    } else {
-      el.style.width = '0%';
-      item.classList.remove('active-gesture');
-    }
+  updateGestureUI(hands, leftHand, rightHand);
+
+  if (rightHand) {
+    handleRightPrompt(rightHand);
+  } else {
+    lastRightPromptGesture = null;
+  }
+
+  if (leftHand) {
+    handleLeftAction(leftHand);
+  } else {
+    resetLeftHoldUI();
+  }
+}
+
+function updateGestureUI(hands, leftHand, rightHand) {
+  const allGestures = ['open','pinch','fist','peace','three'];
+  [
+    { side: 'left', hand: leftHand },
+    { side: 'right', hand: rightHand }
+  ].forEach(({ side, hand }) => {
+    allGestures.forEach(g => {
+      const isActive = hand?.gesture.name.toLowerCase() === g;
+      const confidence = isActive ? hand.gesture.confidence : 0;
+
+      document.querySelectorAll(`[data-side="${side}"][data-confidence="${g}"]`).forEach(el => {
+        el.style.width = (confidence * 100) + '%';
+      });
+      document.querySelectorAll(`[data-side="${side}"][data-gesture="${g}"]`).forEach(item => {
+        item.classList.toggle('active-gesture', isActive);
+      });
+    });
   });
 
-  const activeLabel = trackedHand.label === 'UNKNOWN'
-    ? gesture.name
-    : `${trackedHand.label} ${gesture.name}`;
-  document.getElementById('activeGestureName').textContent = activeLabel;
+  const activeParts = [];
+  if (leftHand && leftHand.gesture.name !== 'NONE') activeParts.push(`LEFT ${leftHand.gesture.name}`);
+  if (rightHand && rightHand.gesture.name !== 'NONE') activeParts.push(`RIGHT ${rightHand.gesture.name}`);
 
-  // Show overlay
+  document.getElementById('activeGestureName').textContent = activeParts.join(' / ') || 'NONE';
+
   const overlay = document.getElementById('gestureOverlay');
-  if (gesture.name !== 'NONE') {
-    overlay.textContent = activeLabel;
+  if (activeParts.length) {
+    overlay.textContent = activeParts.join(' / ');
     overlay.style.opacity = '1';
   } else {
     overlay.style.opacity = '0';
   }
+}
 
-  if (presetMessages[gesture.name]) {
-    queuePresetMessage(gesture.name);
-    overlay.textContent = `QUEUED ${presetMessages[gesture.name].label}`;
+function handleRightPrompt(hand) {
+  const preset = presetMessages[hand.gesture.name];
+  if (!preset) {
+    lastRightPromptGesture = null;
+    return;
   }
 
-  // PINCH hold-to-send
-  if (gesture.name === 'PINCH' && !isGenerating) {
-    if (!document.getElementById('gestureInput').value.trim()) {
-      overlay.textContent = 'QUEUE A PROMPT FIRST';
-      resetHoldUI();
-      lastGesture = null;
+  if (isGenerating || hand.gesture.name === lastRightPromptGesture) return;
+
+  const queued = queuePresetMessage(hand.gesture.name);
+  lastRightPromptGesture = hand.gesture.name;
+  if (!queued) {
+    showOverlay('MANUAL PROMPT ACTIVE');
+    return;
+  }
+  showOverlay(`RIGHT ${preset.label} QUEUED`);
+}
+
+function handleLeftAction(hand) {
+  const action = getLeftAction(hand.gesture.name);
+  if (!action) {
+    resetLeftHoldUI();
+    return;
+  }
+
+  const sendBtn = document.getElementById('sendBtn');
+  if (action.name === 'SEND') {
+    sendBtn.classList.add('pinch-ready');
+    cursor.classList.add('pinch');
+  } else {
+    sendBtn.classList.remove('pinch-ready');
+    cursor.classList.remove('pinch');
+  }
+
+  if (action.name === 'SEND') {
+    const input = document.getElementById('gestureInput');
+    if (!input.value.trim()) {
+      showOverlay('TYPE OR RIGHT-HAND PROMPT FIRST');
+      resetLeftHoldUI();
       return;
     }
 
-    sendBtn.classList.add('pinch-ready');
-    cursor.classList.add('pinch');
-    handleHoldAction('PINCH', pinchSendThreshold, trackedLandmarks[8], () => {
-      fireRipple();
-      sendMessage();
-    });
-  } else if (gesture.name === 'PINCH') {
-    resetHoldUI();
-    lastGesture = null;
-  } else if (gesture.name === 'FIST') {
-    handleHoldAction('FIST', fistClearThreshold, trackedLandmarks[0], () => {
-      fireRipple();
-      clearConversation();
-    });
-    overlay.textContent = `HOLD TO CLEAR ${Math.ceil(Math.max(0, fistClearThreshold - actionHoldTime) / 1000)}S`;
-    sendBtn.classList.remove('pinch-ready');
-    cursor.classList.remove('pinch');
-  } else if (gesture.name === 'POINT' || gesture.name === 'PEACE' || gesture.name === 'OPEN') {
-    resetHoldUI();
-    lastGesture = gesture.name;
-  } else {
-    pinchRing.style.display = 'none';
-    sendBtn.classList.remove('pinch-ready');
-    cursor.classList.remove('pinch');
-    holdActionCompleted = false;
-    actionHoldTime = 0;
-    lastGesture = gesture.name;
+    if (isGenerating) {
+      showOverlay('WAITING FOR RESPONSE');
+      resetLeftHoldUI();
+      return;
+    }
+  }
+
+  handleLeftHold(hand.gesture.name, hand.pixels[action.pointIndex], action.run);
+
+  const remaining = Math.ceil(Math.max(0, leftActionHoldThreshold - leftActionHoldTime) / 1000);
+  showOverlay(leftActionCompleted ? `LEFT ${action.name} COMPLETE` : `HOLD LEFT ${action.name} ${remaining}S`);
+}
+
+function getLeftAction(gestureName) {
+  switch (gestureName) {
+    case 'PINCH':
+      return { name: 'SEND', pointIndex: 8, run: () => window.sendMessage() };
+    case 'PEACE':
+      return { name: 'SCROLL UP', pointIndex: 12, run: () => scrollMessages(-220) };
+    case 'OPEN':
+      return { name: 'SCROLL DOWN', pointIndex: 9, run: () => scrollMessages(220) };
+    case 'FIST':
+      return { name: 'CLEAR', pointIndex: 0, run: clearConversation };
+    default:
+      return null;
   }
 }
 
 function queuePresetMessage(gestureName) {
   const preset = presetMessages[gestureName];
   const input = document.getElementById('gestureInput');
-  const userIsTyping = document.activeElement === input && !selectedPresetGesture;
+  const manualInputActive = input.value.trim() && !selectedPresetGesture;
 
-  if (userIsTyping && input.value.trim()) return;
+  if (manualInputActive) return false;
 
   input.value = preset.text;
   selectedPresetGesture = gestureName;
+  return true;
 }
 
-function handleHoldAction(gestureName, threshold, point, onComplete) {
-  if (lastGesture !== gestureName) {
-    gestureStartTime = Date.now();
-    lastGesture = gestureName;
-    holdActionCompleted = false;
+function handleLeftHold(gestureName, point, onComplete) {
+  if (lastLeftGesture !== gestureName) {
+    leftGestureStartTime = Date.now();
+    lastLeftGesture = gestureName;
+    leftActionCompleted = false;
   }
 
-  actionHoldTime = Date.now() - gestureStartTime;
-  const progress = Math.min(actionHoldTime / threshold, 1);
+  leftActionHoldTime = Date.now() - leftGestureStartTime;
+  const progress = Math.min(leftActionHoldTime / leftActionHoldThreshold, 1);
   showHoldProgress(point, progress);
 
-  if (actionHoldTime >= threshold && !holdActionCompleted) {
-    holdActionCompleted = true;
+  if (leftActionHoldTime >= leftActionHoldThreshold && !leftActionCompleted) {
+    leftActionCompleted = true;
+    fireRipple();
     onComplete();
   }
 }
@@ -1321,28 +1327,39 @@ function showHoldProgress(point, progress) {
   pinchProgress.style.strokeDashoffset = 157 * (1 - progress);
 }
 
-function resetHoldUI() {
+function resetLeftHoldUI() {
   document.getElementById('pinchRing').style.display = 'none';
   document.getElementById('sendBtn').classList.remove('pinch-ready');
   cursor.classList.remove('pinch');
-  actionHoldTime = 0;
-  holdActionCompleted = false;
+  leftActionHoldTime = 0;
+  leftActionCompleted = false;
+  lastLeftGesture = null;
 }
 
 function resetGestureUI() {
   document.getElementById('activeGestureName').textContent = 'NONE';
   document.getElementById('gestureOverlay').style.opacity = '0';
-  ['open','pinch','fist','point','peace'].forEach(g => {
-    document.getElementById(`cf-${g}`).style.width = '0%';
-    document.getElementById(`g-${g}`).classList.remove('active-gesture');
+  ['open','pinch','fist','peace','three'].forEach(g => {
+    document.querySelectorAll(`[data-confidence="${g}"]`).forEach(el => {
+      el.style.width = '0%';
+    });
+    document.querySelectorAll(`[data-gesture="${g}"]`).forEach(item => {
+      item.classList.remove('active-gesture');
+    });
   });
-  for (let i = 0; i < 21; i++) {
-    const dot = document.getElementById(`lm-${i}`);
-    if (dot) dot.classList.remove('lit');
-  }
   document.getElementById('handCount').textContent = '0';
-  resetHoldUI();
-  lastGesture = null;
+  resetLeftHoldUI();
+  lastRightPromptGesture = null;
+}
+
+function scrollMessages(amount) {
+  document.getElementById('messages').scrollBy({ top: amount, behavior: 'smooth' });
+}
+
+function showOverlay(text) {
+  const overlay = document.getElementById('gestureOverlay');
+  overlay.textContent = text;
+  overlay.style.opacity = '1';
 }
 
 function fireRipple() {
@@ -1440,7 +1457,7 @@ function escapeHtml(t) {
 // Enter key
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.activeElement === document.getElementById('gestureInput')) {
-    sendMessage();
+    window.sendMessage();
   }
 });
 

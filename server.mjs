@@ -12,7 +12,7 @@ const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 loadEnv();
 
 const systemInstruction = [
-  'You are GESTURAL, a futuristic AI assistant embedded in a holographic gesture-controlled terminal interface.',
+  'You are SPATIAL, a futuristic AI assistant embedded in a holographic spatial-control terminal interface.',
   'You are concise, intelligent, and slightly dramatic.',
   'Keep responses under 3 sentences unless asked for more.',
   'Use technical language naturally.'
@@ -50,7 +50,7 @@ server.on('error', error => {
 });
 
 server.on('listening', () => {
-  console.log(`Apollo running at http://localhost:${activePort}`);
+  console.log(`Spatial running at http://localhost:${activePort}`);
 });
 
 server.listen(activePort);

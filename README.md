@@ -1,6 +1,6 @@
-# Apollo
+# Spatial
 
-Gesture-controlled Gemini chat prototype.
+Spatial-control Gemini chat prototype.
 
 ## Run locally
 
