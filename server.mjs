@@ -3,20 +3,13 @@ import { readFile } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
 import { extname, join, normalize, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createGeminiReply } from './lib/gemini.mjs';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const root = resolve(__dirname);
 const requestedPort = Number(process.env.PORT || 8000);
-const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 loadEnv();
-
-const systemInstruction = [
-  'You are SPATIAL, a futuristic AI assistant embedded in a holographic spatial-control terminal interface.',
-  'You are concise, intelligent, and slightly dramatic.',
-  'Keep responses under 3 sentences unless asked for more.',
-  'Use technical language naturally.'
-].join(' ');
 
 const server = createServer(async (req, res) => {
   try {
@@ -33,7 +26,9 @@ const server = createServer(async (req, res) => {
     sendJson(res, 405, { error: 'Method not allowed' });
   } catch (error) {
     console.error(error);
-    sendJson(res, 500, { error: 'Internal server error' });
+    sendJson(res, error.status || 500, {
+      error: error.message || 'Internal server error'
+    });
   }
 });
 
@@ -81,61 +76,12 @@ function loadEnv() {
 }
 
 async function handleChat(req, res) {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    sendJson(res, 500, { error: 'GEMINI_API_KEY is missing from .env' });
-    return;
-  }
-
   const body = await readJson(req);
-  const messages = Array.isArray(body.messages) ? body.messages : [];
-  const contents = messages
-    .filter(message => typeof message.content === 'string' && message.content.trim())
-    .map(message => ({
-      role: message.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: message.content }]
-    }));
-
-  if (contents.length === 0) {
-    sendJson(res, 400, { error: 'No message content provided' });
-    return;
-  }
-
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
-  const geminiResp = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': apiKey
-    },
-    body: JSON.stringify({
-      systemInstruction: {
-        parts: [{ text: systemInstruction }]
-      },
-      contents,
-      generationConfig: {
-        maxOutputTokens: 1000
-      }
-    })
+  const reply = await createGeminiReply({
+    messages: body.messages,
+    apiKey: process.env.GEMINI_API_KEY,
+    model: process.env.GEMINI_MODEL
   });
-
-  const data = await geminiResp.json();
-  if (!geminiResp.ok) {
-    sendJson(res, geminiResp.status, {
-      error: data.error?.message || 'Gemini request failed'
-    });
-    return;
-  }
-
-  const reply = data.candidates?.[0]?.content?.parts
-    ?.map(part => part.text || '')
-    .join('')
-    .trim();
-
-  if (!reply) {
-    sendJson(res, 502, { error: 'Gemini returned an empty response' });
-    return;
-  }
 
   sendJson(res, 200, { reply });
 }
