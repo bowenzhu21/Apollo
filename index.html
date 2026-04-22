@@ -824,7 +824,6 @@ let lastLandmarks = null;
 let mouseX = 0, mouseY = 0;
 
 const mirrorCamera = true;
-const swapMediaPipeHandedness = true;
 const cursor = document.getElementById('cursor');
 const trailCanvas = document.getElementById('trailCanvas');
 const trailCtx = trailCanvas.getContext('2d');
@@ -1123,7 +1122,7 @@ function getHands(result) {
 function getUserHandLabel(result, index, landmarks) {
   const rawLabel = getRawHandLabel(result, index);
   if (rawLabel === 'UNKNOWN') return inferHandFromPosition(landmarks);
-  return swapMediaPipeHandedness ? swapHandLabel(rawLabel) : rawLabel;
+  return rawLabel;
 }
 
 function getRawHandLabel(result, index) {
@@ -1135,12 +1134,6 @@ function getRawHandLabel(result, index) {
 
   const label = handedness?.categoryName || handedness?.displayName || handedness?.label;
   return typeof label === 'string' ? label.toUpperCase() : 'UNKNOWN';
-}
-
-function swapHandLabel(label) {
-  if (label === 'LEFT') return 'RIGHT';
-  if (label === 'RIGHT') return 'LEFT';
-  return label;
 }
 
 function inferHandFromPosition(landmarks) {
