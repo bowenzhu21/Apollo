@@ -35,3 +35,5 @@ Steps:
 5. Deploy.
 
 Do not prefix the key with `NEXT_PUBLIC_`; it must stay server-side only.
+
+If the deployed site shows `Not found`, check that Vercel's Project Settings -> Root Directory points at the folder containing `index.html`, `api/chat.mjs`, and `vercel.json`, then redeploy.
