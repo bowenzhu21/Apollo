@@ -156,6 +156,13 @@ function contentType(filePath) {
       return 'application/json; charset=utf-8';
     case '.svg':
       return 'image/svg+xml';
+    case '.png':
+      return 'image/png';
+    case '.jpg':
+    case '.jpeg':
+      return 'image/jpeg';
+    case '.webp':
+      return 'image/webp';
     default:
       return 'application/octet-stream';
   }

@@ -6,8 +6,12 @@
     --neon-purple: #bf00ff;
     --neon-red: #ff0044;
     --neon-orange: #ff6600;
+    --background-photo: url('/assets/apollo.png');
     --bg: #020a0f;
-    --panel: rgba(0, 255, 255, 0.03);
+    --surface: rgba(2, 10, 15, 0.66);
+    --surface-strong: rgba(2, 10, 15, 0.84);
+    --surface-soft: rgba(2, 10, 15, 0.28);
+    --panel: rgba(0, 255, 255, 0.06);
     --border: rgba(0, 255, 255, 0.15);
     --text: #a0f0f0;
     --dim: rgba(0,255,255,0.4);
@@ -16,7 +20,10 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--bg);
+    background:
+      linear-gradient(rgba(2, 10, 15, 0.18), rgba(2, 10, 15, 0.5)),
+      var(--background-photo) center / cover fixed no-repeat,
+      var(--bg);
     color: var(--text);
     font-family: 'Share Tech Mono', monospace;
     height: 100vh;
@@ -45,7 +52,7 @@
     content: '';
     position: fixed;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.8) 100%);
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.58) 100%);
     pointer-events: none;
     z-index: 999;
   }
@@ -85,7 +92,7 @@
   /* Header */
   #header {
     grid-column: 1 / -1;
-    background: var(--bg);
+    background: var(--surface-strong);
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
@@ -149,7 +156,9 @@
 
   /* Left panel - gesture legend */
   #left-panel {
-    background: var(--bg);
+    background: var(--surface);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
     padding: 20px 16px;
     display: flex;
     flex-direction: column;
@@ -231,7 +240,9 @@
 
   /* Camera feed */
   #camera-panel {
-    background: var(--bg);
+    background: var(--surface-soft);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     position: relative;
     overflow: hidden;
     display: flex;
@@ -311,7 +322,9 @@
 
   /* Right panel - stats */
   #right-panel {
-    background: var(--bg);
+    background: var(--surface);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
     padding: 16px 14px;
     display: flex;
     flex-direction: column;
@@ -452,7 +465,9 @@
   /* Chat panel */
   #chat-panel {
     grid-column: 1 / -1;
-    background: var(--bg);
+    background: var(--surface);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
     border-top: 1px solid var(--border);
     display: flex;
     flex-direction: column;
@@ -668,7 +683,10 @@
   #bootScreen {
     position: fixed;
     inset: 0;
-    background: var(--bg);
+    background:
+      linear-gradient(rgba(2, 10, 15, 0.2), rgba(2, 10, 15, 0.68)),
+      var(--background-photo) center / cover no-repeat,
+      var(--bg);
     z-index: 10000;
     display: flex;
     flex-direction: column;
